@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.vinayak09.wsafety.R;
 
 public class RegisterNumberActivity extends AppCompatActivity {
 

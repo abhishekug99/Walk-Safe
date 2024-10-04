@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
-import com.vinayak09.wsafety.R;
-
 public class SplashScreen extends AppCompatActivity {
 
     @Override

@@ -21,8 +21,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.vinayak09.wsafety.R;
-
 import java.util.Map;
 
 

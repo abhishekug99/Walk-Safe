@@ -20,7 +20,6 @@ import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.vinayak09.wsafety.R;
 
 public class ServiceMine extends Service {
 

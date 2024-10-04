@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/background"
     android:layout_height="match_parent"
-    tools:context=".RegisterNumberActivity">
+    tools:context="com.uddesh04.womenSafety.RegisterNumberActivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"
