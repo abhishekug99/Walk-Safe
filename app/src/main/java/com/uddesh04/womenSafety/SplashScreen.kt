@@ -1,30 +1,23 @@
-package com.uddesh04.womenSafety;
+package com.uddesh04.womenSafety
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent
+import android.os.Bundle
+import android.os.CountDownTimer
+import androidx.appcompat.app.AppCompatActivity
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.CountDownTimer;
+class SplashScreen : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash_screen)
 
-public class SplashScreen extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
-
-        new CountDownTimer(1000,500){
-            @Override
-            public void onTick(long millisUntilFinished) {
-
+        object : CountDownTimer(1000, 500) {
+            override fun onTick(millisUntilFinished: Long) {
             }
 
-            @Override
-            public void onFinish() {
-                startActivity(new Intent(SplashScreen.this,MainActivity.class));
-                SplashScreen.this.finish();
+            override fun onFinish() {
+                startActivity(Intent(this@SplashScreen, MainActivity::class.java))
+                this@SplashScreen.finish()
             }
-        }.start();
-
+        }.start()
     }
 }
