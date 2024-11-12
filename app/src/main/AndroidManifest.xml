@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Override for Firebase library -->
+    <uses-sdk tools:overrideLibrary="com.google.firebase.auth" />
+
+    <!-- Required features -->
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
         android:required="true" />
@@ -8,12 +13,11 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
-
 
     <application
         android:allowBackup="true"
@@ -23,27 +27,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wsafety"
         tools:replace="android:label, android:icon">
-        <activity android:name=".RegisterNumberActivity"></activity>
+
+        <!-- Splash screen as the launcher activity -->
         <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Main activity -->
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
 
+        <!-- Other activities -->
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".GoogleLoginActivity" />
+        <activity android:name=".RegisterNumberActivity" />
 
+        <!-- Service for background operations -->
         <service
             android:name=".ServiceMine"
             android:enabled="true"
             android:foregroundServiceType="location"
-            android:exported="false"/>
-
+            android:exported="false" />
     </application>
 
 </manifest>

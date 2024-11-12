@@ -18,6 +18,12 @@
         android:layout_margin="20dp"
         android:background="@drawable/ic_baseline_more_vert_24"/>
 
+    <Button
+        android:id="@+id/btnPopupMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Menu" />
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
