@@ -16,8 +16,13 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -40,13 +45,15 @@
 
         <!-- Main activity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".HomeScreenActivity"
             android:exported="true" />
 
         <!-- Other activities -->
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity"
+            android:exported="true"/>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".GoogleLoginActivity" />
+        <activity android:name=".MyProfileActivity" />
+        <activity android:name=".SOSServiceActivity" />
         <activity android:name=".RegisterNumberActivity" />
 
         <!-- Service for background operations -->
@@ -55,6 +62,16 @@
             android:enabled="true"
             android:foregroundServiceType="location"
             android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.uddesh04.womenSafety.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

@@ -1,63 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/background"
     android:layout_height="match_parent"
-    tools:context="com.uddesh04.womenSafety.RegisterNumberActivity">
+    android:background="@drawable/background">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/purple_500"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <!-- Centered Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:padding="16dp">
 
+        <!-- Instruction Text -->
         <TextView
+            android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
             android:text="Enter Number To\nSend SMS\nin\nEMERGENCY!"
-            android:textSize="19sp"
-            android:fontFamily="@font/varela_round"
+            android:textAlignment="center"
             android:textColor="@color/black"
-            android:id="@+id/text1"
-            android:textAlignment="center"/>
+            android:textSize="18sp"
+            android:fontFamily="@font/varela_round" />
 
+        <!-- Input Field -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="250dp"
+            android:id="@+id/numberLayout"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
-            android:id="@+id/number"
-            android:layout_below="@id/text1"
+            android:layout_marginBottom="16dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:hint="Number"
-                android:inputType="numberDecimal"
                 android:id="@+id/numberEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Number"
+                android:inputType="phone"
                 android:maxLength="10"
                 android:fontFamily="@font/varela_round"
-                android:textAlignment="center"
-                android:layout_height="match_parent"/>
+                android:textAlignment="center" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Finish Button -->
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/finishButton"
             android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
-            android:onClick="saveNumber"
-            android:textColor="@color/black"
-            app:cornerRadius="10dp"
-            android:layout_below="@id/number"
-            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/purple_500"
+            android:text="Finish"
+            android:textColor="@android:color/white"
             android:fontFamily="@font/varela_round"
-            android:backgroundTint="#ffffff"
-            android:text="Finish"/>
-
-    </RelativeLayout>
-
-
-
-
+            android:onClick="saveNumber" />
+    </LinearLayout>
 </RelativeLayout>

@@ -27,6 +27,38 @@
                 android:gravity="center"
                 android:textColor="@color/black"/>
 
+            <!-- Profile Picture Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile Picture (Optional)"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp" />
+
+            <ImageView
+                android:id="@+id/profileImagePreview"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:src="@drawable/default_profile_picture"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/circular_background" />
+
+            <Button
+                android:id="@+id/btnUploadFromGallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload from Gallery"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnCapturePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capture Photo" />
+
+
             <!-- First Name -->
             <EditText
                 android:id="@+id/editTextFirstName"
@@ -125,14 +157,6 @@
                 android:layout_height="wrap_content"
                 android:text="Register"
                 android:layout_marginTop="16dp"/>
-
-            <!-- Google Sign-In Button -->
-            <Button
-                android:id="@+id/btnGoogleRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Register with Google"
-                android:layout_marginTop="8dp"/>
         </LinearLayout>
     </ScrollView>
 

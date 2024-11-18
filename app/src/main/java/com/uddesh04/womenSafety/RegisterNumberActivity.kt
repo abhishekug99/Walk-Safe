@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+
 
 class RegisterNumberActivity : AppCompatActivity() {
     private var number: TextInputEditText? = null
@@ -16,6 +18,17 @@ class RegisterNumberActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register_number)
 
         number = findViewById(R.id.numberEdit)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true) // Enable the back arrow
+        supportActionBar?.title = "Register Trusted Contact"
+    }
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed() // Handle the back button click to navigate back
+        return true
     }
 
     fun saveNumber(view: View?) {
@@ -25,7 +38,8 @@ class RegisterNumberActivity : AppCompatActivity() {
             val myEdit = sharedPreferences.edit()
             myEdit.putString("ENUM", numberString)
             myEdit.apply()
-            val intent = Intent(this, MainActivity::class.java)
+            Toast.makeText(this, "Trusted Contact Saved!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SOSServiceActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear the back stack
             startActivity(intent)
             finish()

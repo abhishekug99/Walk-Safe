@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="com.uddesh04.womenSafety.SOSServiceActivity">
+
+    <!-- Toolbar with Back Arrow and Popup Menu -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/purple_500">
+
+        <!-- Back Arrow -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp" />
+
+        <!-- Popup Menu -->
+        <ImageButton
+            android:id="@+id/btnPopupMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_baseline_more_vert_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Popup Menu"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp" />
+    </RelativeLayout>
+
+    <!-- Main Content -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <!-- Trusted Contact Text -->
+        <TextView
+            android:id="@+id/textNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:text="SOS Will Be Sent To\n"
+            android:layout_centerHorizontal="true" />
+
+        <!-- Start Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/start"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/textNum"
+            android:layout_marginTop="20dp"
+            app:cornerRadius="10dp"
+            android:backgroundTint="#ffffff"
+            android:textColor="@color/black"
+            android:text="Start"
+            android:onClick="startService" />
+
+        <!-- Stop Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/stop"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/start"
+            android:layout_marginTop="10dp"
+            app:cornerRadius="10dp"
+            android:backgroundTint="#ffffff"
+            android:textColor="@color/black"
+            android:text="Stop"
+            android:onClick="stopService" />
+    </RelativeLayout>
+
+</RelativeLayout>
