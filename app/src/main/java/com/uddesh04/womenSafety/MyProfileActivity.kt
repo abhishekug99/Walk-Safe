@@ -8,9 +8,11 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import androidx.appcompat.app.AlertDialog
 
 class MyProfileActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
@@ -34,7 +36,7 @@ class MyProfileActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         // Bottom Navigation
-        val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         setupBottomNavigation(bottomNavigationView)
         bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
 
@@ -43,6 +45,7 @@ class MyProfileActivity : BaseActivity() {
         val nameField = findViewById<TextView>(R.id.textUserName)
         val listView = findViewById<ListView>(R.id.listViewContacts)
         val addContactButton = findViewById<Button>(R.id.btnAddContact)
+        val changePasswordButton = findViewById<Button>(R.id.btnChangePassword) // Change Password Button
 
         // Load user details
         fetchUserDetails(nameField, emailField)
@@ -64,6 +67,11 @@ class MyProfileActivity : BaseActivity() {
 
             val pickContactIntent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
             startActivityForResult(pickContactIntent, CONTACT_PICKER_REQUEST)
+        }
+
+        // Handle Change Password
+        changePasswordButton.setOnClickListener {
+            showChangePasswordDialog()
         }
     }
 
@@ -125,6 +133,55 @@ class MyProfileActivity : BaseActivity() {
         val userId = user?.uid ?: return
         val database = FirebaseDatabase.getInstance().reference
         database.child("users").child(userId).child("trusted_contacts").setValue(trustedNumbersList)
+    }
+
+    private fun showChangePasswordDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_change_password, null)
+        val oldPasswordInput = dialogView.findViewById<EditText>(R.id.editTextOldPassword)
+        val newPasswordInput = dialogView.findViewById<EditText>(R.id.editTextNewPassword)
+        val confirmPasswordInput = dialogView.findViewById<EditText>(R.id.editTextConfirmPassword)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Change Password")
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.btnSubmitChange).setOnClickListener {
+            val oldPassword = oldPasswordInput.text.toString()
+            val newPassword = newPasswordInput.text.toString()
+            val confirmPassword = confirmPasswordInput.text.toString()
+
+            if (newPassword != confirmPassword) {
+                Toast.makeText(this, "New passwords do not match.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (newPassword.isEmpty() || oldPassword.isEmpty()) {
+                Toast.makeText(this, "All fields are required.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val credential = EmailAuthProvider.getCredential(user!!.email!!, oldPassword)
+            user?.reauthenticate(credential)
+                ?.addOnCompleteListener { reauthTask ->
+                    if (reauthTask.isSuccessful) {
+                        user?.updatePassword(newPassword)
+                            ?.addOnCompleteListener { updateTask ->
+                                if (updateTask.isSuccessful) {
+                                    Toast.makeText(this, "Password changed successfully!", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                } else {
+                                    Toast.makeText(this, "Failed to update password.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(this, "Old password is incorrect.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+
+        dialog.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
