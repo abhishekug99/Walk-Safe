@@ -166,10 +166,10 @@ class SOSServiceActivity : BaseActivity() {
             startButton.isEnabled = false
             startButton.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
             stopButton.isEnabled = true
-            stopButton.setBackgroundColor(ContextCompat.getColor(this, R.color.design_default_color_error))
+            stopButton.setBackgroundColor(ContextCompat.getColor(this, R.color.red))
         } else {
             startButton.isEnabled = true
-            startButton.setBackgroundColor(ContextCompat.getColor(this, R.color.design_default_color_secondary_variant))
+            startButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
             stopButton.isEnabled = false
             stopButton.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
         }
