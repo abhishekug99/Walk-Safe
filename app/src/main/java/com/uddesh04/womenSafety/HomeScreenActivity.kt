@@ -83,6 +83,13 @@ class HomeScreenActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.menu.findItem(R.id.nav_home).isChecked = true
+    }
+
     private fun setupNavigationHeader() {
         val headerView = navigationView.getHeaderView(0)
         val headerUserName = headerView.findViewById<TextView>(R.id.headerUserName)
