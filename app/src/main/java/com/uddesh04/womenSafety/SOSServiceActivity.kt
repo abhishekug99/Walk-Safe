@@ -4,44 +4,49 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import androidx.appcompat.widget.Toolbar
-
+import com.google.firebase.database.FirebaseDatabase
 
 class SOSServiceActivity : BaseActivity() {
     private lateinit var multiplePermissions: ActivityResultLauncher<Array<String>>
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private var trustedContacts: MutableList<String> = mutableListOf()
+    private lateinit var startButton: MaterialButton
+    private lateinit var stopButton: MaterialButton
+    private var isServiceRunning: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sos_service)
 
+        startButton = findViewById(R.id.start)
+        stopButton = findViewById(R.id.stop)
+
+        updateButtonStates()
+
         val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
         setupBottomNavigation(bottomNavigationView)
         bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
 
-        //Toolbar
         val backButton = findViewById<ImageButton>(R.id.btnBack)
         backButton.setOnClickListener {
             val intent = Intent(this, HomeScreenActivity::class.java)
@@ -62,14 +67,10 @@ class SOSServiceActivity : BaseActivity() {
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-
-
-        // Initialize the permissions launcher
         multiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             handlePermissionsResult(result)
         }
 
-        // Set up the notification channel for Android O and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "MYID",
@@ -79,41 +80,40 @@ class SOSServiceActivity : BaseActivity() {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-        displayTrustedContact()
 
-//        val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
-//        setupBottomNavigation(bottomNavigationView)
-//        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
-    }
-
-    //toolBarHandle
-    override fun onSupportNavigateUp(): Boolean {
-        val intent = Intent(this, HomeScreenActivity::class.java) // Navigate to HomeActivity
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Clear the back stack
-        startActivity(intent)
-        finish()
-        return true
+        fetchTrustedContacts()
     }
 
     override fun onResume() {
         super.onResume()
-        displayTrustedContact() // Refresh trusted contact display if the user updates it
+        fetchTrustedContacts()
     }
 
+    private fun fetchTrustedContacts() {
+        val userId = auth.currentUser?.uid ?: return
+        val databaseRef = FirebaseDatabase.getInstance().reference
 
-    private fun displayTrustedContact() {
-        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-        val trustedNumber = sharedPreferences.getString("ENUM", "NONE")
+        databaseRef.child("users").child(userId).child("trusted_contacts")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                trustedContacts.clear()
+                snapshot.children.mapNotNullTo(trustedContacts) { it.getValue(String::class.java) }
+                updateTrustedContactsTextView()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to fetch trusted contacts.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateTrustedContactsTextView() {
         val textView = findViewById<TextView>(R.id.textNum)
-        if (trustedNumber != "NONE") {
-            textView.text = "SOS Will Be Sent To\n$trustedNumber"
+        if (trustedContacts.isNotEmpty()) {
+            textView.text = "SOS Will Be Sent To:\n${trustedContacts.joinToString("\n")}"
         } else {
-            textView.text = "No trusted contact set. Please register a number."
+            textView.text = "No trusted contacts set. Please register numbers."
         }
     }
 
-
-    //NEW handle permissions
     private fun handlePermissionsResult(result: Map<String, Boolean>) {
         if (result.values.any { !it }) {
             Snackbar.make(
@@ -125,59 +125,71 @@ class SOSServiceActivity : BaseActivity() {
             }.show()
         }
     }
-    // Handle permissions result
-//    private fun handlePermissionsResult(result: Map<String, Boolean>) {
-//        for ((permission, isGranted) in result) {
-//            if (!isGranted) {
-//                // Show a snackbar if any permission is denied
-//                val snackbar = Snackbar.make(
-//                    findViewById(android.R.id.content),
-//                    "Permission Must Be Granted!",
-//                    Snackbar.LENGTH_INDEFINITE
-//                )
-//                snackbar.setAction("Grant Permission") {
-//                    multiplePermissions.launch(arrayOf(permission))
-//                    snackbar.dismiss()
-//                }
-//                snackbar.show()
-//            }
-//        }
-//    }
 
-    // Start the SOS service if permissions are granted
     fun startService(view: View?) {
         if (checkPermissions()) {
-            val intent = Intent(this, ServiceMine::class.java).apply { action = "START" }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ContextCompat.startForegroundService(this, intent)
-                //applicationContext.startForegroundService(intent)
-                showSnackbar("Service Started!")
+            if (trustedContacts.isNotEmpty()) {
+                for (contact in trustedContacts) {
+                    sendSOSMessage(contact)
+                }
+                val intent = Intent(this, ServiceMine::class.java).apply { action = "START" }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ContextCompat.startForegroundService(this, intent)
+                    showSnackbar("SOS Messages Sent and Service Started!")
+                } else {
+                    startService(intent)
+                }
+                isServiceRunning = true
+                updateButtonStates()
             } else {
-                startService(intent)
+                Toast.makeText(this, "No trusted contacts to send SOS.", Toast.LENGTH_SHORT).show()
             }
         } else {
             requestPermissions()
         }
     }
 
-    // Stop the SOS service
     fun stopService(view: View?) {
         val intent = Intent(this, ServiceMine::class.java).apply { action = "STOP" }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ContextCompat.startForegroundService(this, intent)
-//            applicationContext.startForegroundService(intent)
+            stopService(intent)
             showSnackbar("Service Stopped!")
         } else {
             stopService(intent)
         }
+        isServiceRunning = false
+        updateButtonStates()
     }
 
-    // Helper function to show a snackbar message
+    private fun updateButtonStates() {
+        if (isServiceRunning) {
+            startButton.isEnabled = false
+            startButton.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+            stopButton.isEnabled = true
+            stopButton.setBackgroundColor(ContextCompat.getColor(this, R.color.red))
+        } else {
+            startButton.isEnabled = true
+            startButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
+            stopButton.isEnabled = false
+            stopButton.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+        }
+    }
+
     private fun showSnackbar(message: String) {
         Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
-    // Check if required permissions are granted
+    private fun sendSOSMessage(contact: String) {
+        val sosMessage = "Help! I am in danger. Please contact me immediately!"
+        try {
+            val smsManager = android.telephony.SmsManager.getDefault()
+            smsManager.sendTextMessage(contact, null, sosMessage, null, null)
+            Toast.makeText(this, "SOS sent to $contact", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to send SOS to $contact", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun checkPermissions(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -193,7 +205,6 @@ class SOSServiceActivity : BaseActivity() {
                 ) == PackageManager.PERMISSION_GRANTED
     }
 
-    // Request necessary permissions
     private fun requestPermissions() {
         multiplePermissions.launch(
             arrayOf(
@@ -204,64 +215,24 @@ class SOSServiceActivity : BaseActivity() {
         )
     }
 
-    private fun handleLogoutSuccess() {
-        Toast.makeText(this, "Logged Out successfully", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
-
-    // Display popup menu for additional options
     private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(this, view)
+        val popupMenu = android.widget.PopupMenu(this, view)
         popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.changeNumber -> {
                     startActivity(Intent(this, RegisterNumberActivity::class.java))
                     true
                 }
-
                 R.id.logOut -> {
-                    // Check if the user is signed in with Google
-                    val currentUser = auth.currentUser
-                    if (currentUser != null) {
-                        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
-                        if (googleSignInAccount != null) {
-                            // Google sign out and revoke access
-                            googleSignInClient.revokeAccess().addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    auth.signOut()
-                                    handleLogoutSuccess()
-                                } else {
-                                    Toast.makeText(
-                                        this,
-                                        "Failed to log out from Google",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        } else {
-                            // Firebase (Email/Password) logout
-                            auth.signOut()
-                            handleLogoutSuccess()
-                        }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Failed to log out. No active user.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    auth.signOut()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
                     true
                 }
-
                 else -> false
             }
         }
         popupMenu.show()
     }
 }
-

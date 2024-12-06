@@ -171,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:menu="@menu/bottom_nav_menu"
-            android:background="@color/white"
+            android:background="@color/bar_color"
             app:itemIconTint="@color/black"
             app:itemTextColor="@color/black" />
 
@@ -183,7 +183,7 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/purple_500"
+        android:background="@color/bar_color"
         android:padding="16dp"
         app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/navigation_header" />
