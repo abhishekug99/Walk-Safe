@@ -14,7 +14,7 @@ import com.google.firebase.database.*
 class MyProfileActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var trustedNumbersList: MutableList<String>
-    private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var adapter: TrustedContactsAdapter
     private var user: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,9 @@ class MyProfileActivity : BaseActivity() {
 
         // Initialize trusted contacts
         trustedNumbersList = mutableListOf()
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, trustedNumbersList)
+        adapter = TrustedContactsAdapter(this, trustedNumbersList) { contact ->
+            deleteContact(contact)
+        }
         listView.adapter = adapter
         fetchTrustedContacts()
 
@@ -61,13 +63,6 @@ class MyProfileActivity : BaseActivity() {
 
             val pickContactIntent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
             startActivityForResult(pickContactIntent, CONTACT_PICKER_REQUEST)
-        }
-
-        // Handle long press to delete contact
-        listView.setOnItemLongClickListener { _, _, position, _ ->
-            val contactToDelete = trustedNumbersList[position]
-            showDeleteContactDialog(contactToDelete, position)
-            true
         }
     }
 
@@ -84,16 +79,6 @@ class MyProfileActivity : BaseActivity() {
                     // Populate fields
                     nameField.text = name
                     emailField.setText(email)
-
-                    // Load profile picture
-                    val photoUrl = snapshot.child("photo_url").getValue(String::class.java)
-                    val profileImageView = findViewById<ImageView>(R.id.profileImageView)
-                    if (!photoUrl.isNullOrEmpty()) {
-                        Glide.with(this@MyProfileActivity)
-                            .load(photoUrl)
-                            .placeholder(R.drawable.default_profile_picture)
-                            .into(profileImageView)
-                    }
                 }
             }
 
@@ -121,24 +106,17 @@ class MyProfileActivity : BaseActivity() {
             })
     }
 
+    private fun deleteContact(contact: String) {
+        trustedNumbersList.remove(contact)
+        adapter.notifyDataSetChanged()
+        saveTrustedContacts()
+        Toast.makeText(this, "Contact deleted successfully!", Toast.LENGTH_SHORT).show()
+    }
+
     private fun saveTrustedContacts() {
         val userId = user?.uid ?: return
         val database = FirebaseDatabase.getInstance().reference
         database.child("users").child(userId).child("trusted_contacts").setValue(trustedNumbersList)
-    }
-
-    private fun showDeleteContactDialog(contact: String, position: Int) {
-        android.app.AlertDialog.Builder(this)
-            .setTitle("Delete Contact")
-            .setMessage("Are you sure you want to delete this contact?")
-            .setPositiveButton("Delete") { _, _ ->
-                trustedNumbersList.removeAt(position)
-                adapter.notifyDataSetChanged()
-                saveTrustedContacts()
-                Toast.makeText(this, "Contact deleted successfully!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
