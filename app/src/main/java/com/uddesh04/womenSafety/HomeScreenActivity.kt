@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,12 +24,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class HomeScreenActivity : AppCompatActivity() {
+
+class HomeScreenActivity : BaseActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var auth: FirebaseAuth
     private var currentUser: FirebaseUser? = null
     private lateinit var navigationView: NavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationDrawer)
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
         findViewById<ImageView>(R.id.btnHamburger).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
@@ -62,6 +66,9 @@ class HomeScreenActivity : AppCompatActivity() {
 //        }
 
         setupNavigationHeader()
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        setupBottomNavigation(bottomNavigationView)
+
         // Initialize Navigation Drawer
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -83,9 +90,21 @@ class HomeScreenActivity : AppCompatActivity() {
         }
 
         // "Walk Safe" tile - No action currently specified, keep it for aesthetic purposes
-        findViewById<LinearLayout>(R.id.futureTile).setOnClickListener {
-            // Optional: Add action if required
+        findViewById<LinearLayout>(R.id.cameraDetectorTile).setOnClickListener {
+            startActivity(Intent(this, MagnetometerActivity::class.java))
         }
+
+        findViewById<LinearLayout>(R.id.liveLocationTile).setOnClickListener {
+            startActivity(Intent(this, LiveLocationActivity::class.java))
+        }
+
+
+        findViewById<LinearLayout>(R.id.selfDefenceTile).setOnClickListener {
+            startActivity(Intent(this, SelfDefenceActivity::class.java))
+        }
+
+
+
 
 
 //        val profileButton = findViewById<ImageView>(R.id.btnProfile)
@@ -178,4 +197,27 @@ class HomeScreenActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+//    private fun setupBottomNavigation() {
+//        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.nav_home -> {
+//                    // Navigate to Home
+//                    startActivity(Intent(this, HomeScreenActivity::class.java))
+//                    true
+//                }
+//                R.id.nav_contacts -> {
+//                    // Navigate to RegisterNumberActivity
+//                    startActivity(Intent(this, RegisterNumberActivity::class.java))
+//                    true
+//                }
+//                R.id.nav_profile -> {
+//                    // Navigate to MyProfileActivity
+//                    startActivity(Intent(this, MyProfileActivity::class.java))
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
+//    }
 }

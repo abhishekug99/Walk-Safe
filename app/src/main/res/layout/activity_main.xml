@@ -12,6 +12,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
+        android:minWidth="48dp"
         android:onClick="PopupMenu"
         android:clickable="true"
         android:focusable="true"

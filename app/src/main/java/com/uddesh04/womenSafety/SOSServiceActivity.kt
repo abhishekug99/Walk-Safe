@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.widget.Toolbar
 
 
-class SOSServiceActivity : AppCompatActivity() {
+class SOSServiceActivity : BaseActivity() {
     private lateinit var multiplePermissions: ActivityResultLauncher<Array<String>>
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -36,6 +36,10 @@ class SOSServiceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sos_service)
+
+        val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+        setupBottomNavigation(bottomNavigationView)
+        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
 
         //Toolbar
         val backButton = findViewById<ImageButton>(R.id.btnBack)
@@ -76,6 +80,10 @@ class SOSServiceActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
         displayTrustedContact()
+
+//        val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+//        setupBottomNavigation(bottomNavigationView)
+//        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
     }
 
     //toolBarHandle

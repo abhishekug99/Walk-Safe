@@ -55,6 +55,10 @@
         <activity android:name=".MyProfileActivity" />
         <activity android:name=".SOSServiceActivity" />
         <activity android:name=".RegisterNumberActivity" />
+        <activity android:name=".MagnetometerActivity" />
+        <activity android:name=".LiveLocationActivity" />
+        <activity android:name=".SelfDefenceActivity" />
+
 
         <!-- Service for background operations -->
         <service

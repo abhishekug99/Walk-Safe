@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
+import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -29,7 +30,7 @@ import com.google.type.Date
 import java.io.File
 import java.util.Locale
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var oneTapClient: SignInClient

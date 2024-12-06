@@ -4,89 +4,177 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
 
     <!-- Main content view -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background">
+        android:layout_height="match_parent">
 
-        <!-- Hamburger Icon -->
-        <ImageView
-            android:id="@+id/btnHamburger"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_hamburger"
-            android:contentDescription="Hamburger Menu"
-            android:layout_alignParentStart="true"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:layout_above="@id/bottomNavigationView">
 
-        <!-- Application Title -->
-        <TextView
-            android:id="@+id/appTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="80dp"
-            android:text="Walk Safe"
-            android:textColor="@android:color/white"
-            android:textSize="28sp"
-            android:fontFamily="@font/varela_round"
-            android:textStyle="bold" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
-        <!-- Tile Section -->
-        <GridLayout
-            android:id="@+id/tileSection"
+                <!-- Hamburger Icon -->
+                <ImageView
+                    android:id="@+id/btnHamburger"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_hamburger"
+                    android:contentDescription="Hamburger Menu"
+                    android:layout_alignParentStart="true" />
+
+                <!-- Application Title -->
+                <TextView
+                    android:id="@+id/appTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="80dp"
+                    android:text="Walk Safe"
+                    android:textColor="@android:color/white"
+                    android:textSize="28sp"
+                    android:fontFamily="@font/varela_round"
+                    android:textStyle="bold" />
+
+                <!-- Tile Section -->
+                <GridLayout
+                    android:id="@+id/tileSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/appTitle"
+                    android:layout_marginTop="50dp"
+                    android:columnCount="2"
+                    android:padding="16dp">
+
+                    <!-- Start SOS Service Tile -->
+                    <LinearLayout
+                        android:id="@+id/startSOSServiceTile"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/tile_background">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Start SOS Service"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/varela_round"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <!-- Camera Detector -->
+                    <LinearLayout
+                        android:id="@+id/cameraDetectorTile"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/tile_background">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Camera Detector"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/varela_round"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <!-- Live Location -->
+                    <LinearLayout
+                        android:id="@+id/liveLocationTile"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/tile_background">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Live Location"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/varela_round"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <!-- Siren -->
+                    <LinearLayout
+                        android:id="@+id/sirenTile"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/tile_background">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Siren"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/varela_round"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <!-- Self-Defence -->
+                    <LinearLayout
+                        android:id="@+id/selfDefenceTile"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/tile_background">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Self-Defence"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/varela_round"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </GridLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <!-- Bottom Navigation -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appTitle"
-            android:layout_marginTop="50dp"
-            android:columnCount="2"
-            android:padding="16dp">
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_nav_menu"
+            android:background="@color/white"
+            app:itemIconTint="@color/black"
+            app:itemTextColor="@color/black" />
 
-            <!-- Start SOS Service Tile -->
-            <LinearLayout
-                android:id="@+id/startSOSServiceTile"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/tile_background">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Start SOS Service"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/varela_round"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <!-- Placeholder for Future Tile -->
-            <LinearLayout
-                android:id="@+id/futureTile"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/tile_background">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Future Feature"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/varela_round"
-                    android:gravity="center" />
-            </LinearLayout>
-        </GridLayout>
     </RelativeLayout>
 
     <!-- Drawer Layout with NavigationView -->
@@ -98,6 +186,6 @@
         android:background="@color/purple_500"
         android:padding="16dp"
         app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/navigation_header"/>
+        app:headerLayout="@layout/navigation_header" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

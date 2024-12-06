@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context="com.uddesh04.womenSafety.SOSServiceActivity">
+    android:background="@drawable/background">
 
     <!-- Toolbar with Back Arrow and Popup Menu -->
     <RelativeLayout
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/purple_500">
+        android:background="@color/purple_500"
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Back Arrow -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:minWidth="48dp"
             android:src="@drawable/ic_baseline_arrow_back_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
@@ -29,9 +31,10 @@
             android:id="@+id/btnPopupMenu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:minWidth="48dp"
             android:src="@drawable/ic_baseline_more_vert_24"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Popup Menu"
+            android:contentDescription="@string/popup_menu"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp" />
     </RelativeLayout>
@@ -40,6 +43,10 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_centerInParent="true">
 
         <!-- Trusted Contact Text -->
@@ -47,9 +54,11 @@
             android:id="@+id/textNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:paddingHorizontal="12dp"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:text="SOS Will Be Sent To\n"
+            android:text="@string/sos_will_be_sent_to_n"
             android:layout_centerHorizontal="true" />
 
         <!-- Start Button -->
@@ -79,4 +88,12 @@
             android:onClick="stopService" />
     </RelativeLayout>
 
-</RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

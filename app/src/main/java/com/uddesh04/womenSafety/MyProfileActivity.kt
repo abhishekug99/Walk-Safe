@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
-class MyProfileActivity : AppCompatActivity() {
+class MyProfileActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var trustedNumbersList: MutableList<String>
     private lateinit var adapter: ArrayAdapter<String>
@@ -27,6 +27,7 @@ class MyProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_profile)
+
 
         // Firebase Authentication
         auth = Firebase.auth
@@ -37,6 +38,11 @@ class MyProfileActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "My Profile"
+        toolbar.setNavigationOnClickListener { onBackPressed() }
+
+        val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+        setupBottomNavigation(bottomNavigationView)
+        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
 
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
@@ -53,6 +59,7 @@ class MyProfileActivity : AppCompatActivity() {
         // Load user details
         val profileImageView = findViewById<ImageView>(R.id.profileImageView)
         fetchUserDetails(nameField, dobField, ageField, emailField, profileImageView)
+
         //call of login with google
         emailField.setText(user?.email)
         nameField.text = user?.displayName ?: "Unknown User"
@@ -67,6 +74,48 @@ class MyProfileActivity : AppCompatActivity() {
         listView.setOnItemClickListener { _, _, position, _ ->
             setTrustedContact(trustedNumbersList[position])
             Toast.makeText(this, "Trusted Contact Updated!", Toast.LENGTH_SHORT).show()
+
+
+        }
+
+        // Handle long press to delete a trusted contact
+        listView.setOnItemLongClickListener { _, _, position, _ ->
+            val contactToDelete = trustedNumbersList[position]
+            val deleteDialog = android.app.AlertDialog.Builder(this)
+                .setTitle("Delete Contact")
+                .setMessage("Are you sure you want to delete this contact?")
+                .setPositiveButton("Delete") { _, _ ->
+                    trustedNumbersList.remove(contactToDelete)
+                    adapter.notifyDataSetChanged()
+                    saveTrustedContacts(trustedNumbersList)
+
+                    // Update SharedPreferences and Firebase
+                    val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+                    val currentTrustedContact = sharedPreferences.getString("ENUM", "")
+
+                    if (contactToDelete == currentTrustedContact) {
+                        val myEdit = sharedPreferences.edit()
+                        myEdit.putString("ENUM", trustedNumbersList.firstOrNull() ?: "")
+                        myEdit.apply()
+                    }
+
+                    val userId = user?.uid ?: return@setPositiveButton
+                    val databaseRef = FirebaseDatabase.getInstance().reference
+                    databaseRef.child("users").child(userId).child("trusted_contacts")
+                        .setValue(trustedNumbersList)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Contact deleted successfully!", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { error ->
+                            Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+            deleteDialog.show()
+            true
         }
 
         // Save Email Changes
@@ -135,16 +184,41 @@ class MyProfileActivity : AppCompatActivity() {
 
 
     private fun getTrustedContacts(): MutableList<String> {
-        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-        val contacts = sharedPreferences.getStringSet("TRUSTED_CONTACTS", emptySet()) ?: emptySet()
-        return contacts.toMutableList()
+//        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+//        val contacts = sharedPreferences.getStringSet("TRUSTED_CONTACTS", emptySet()) ?: emptySet()
+//        return contacts.toMutableList()
+        val userId = user?.uid ?: return mutableListOf()
+        val contactsList = mutableListOf<String>()
+        val databaseRef = FirebaseDatabase.getInstance().reference
+
+        databaseRef.child("users").child(userId).child("trusted_contacts")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        snapshot.children.forEach { contact ->
+                            contact.getValue(String::class.java)?.let { contactsList.add(it) }
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@MyProfileActivity, "Failed to load contacts: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        return contactsList
+
     }
 
     private fun saveTrustedContacts(contacts: List<String>) {
-        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putStringSet("TRUSTED_CONTACTS", contacts.toSet())
-        editor.apply()
+//        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+//        val editor = sharedPreferences.edit()
+//        editor.putStringSet("TRUSTED_CONTACTS", contacts.toSet())
+//        editor.apply()
+        val userId = user?.uid ?: return
+        val databaseRef = FirebaseDatabase.getInstance().reference
+        databaseRef.child("users").child(userId).child("trusted_contacts").setValue(contacts)
     }
 
     private fun setTrustedContact(contact: String) {
