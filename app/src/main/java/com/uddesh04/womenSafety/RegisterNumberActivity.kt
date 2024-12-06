@@ -37,6 +37,13 @@ class RegisterNumberActivity : BaseActivity() {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.menu.findItem(R.id.nav_contacts).isChecked = true
+    }
+
     fun saveNumber(view: View?) {
         val numberString = number?.text.toString()
 
