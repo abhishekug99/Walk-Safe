@@ -7,6 +7,7 @@ import android.provider.ContactsContract
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -86,6 +87,13 @@ class MyProfileActivity : BaseActivity() {
                 Toast.makeText(this@MyProfileActivity, "Error loading profile data: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
     }
 
     private fun fetchTrustedContacts() {
