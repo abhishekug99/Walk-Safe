@@ -14,7 +14,7 @@
     <color name="google_blue">#4285F4</color>
     <color name="primary">#FF6200EE</color>
     <color name="gray">#757575</color>
-    <color name = "linkColor">#0863FA</color>
+    <color name ="linkColor">#0863FA</color>
     <color name="red">#F44336</color>
     <color name="green">#4CAF50</color>
 </resources>

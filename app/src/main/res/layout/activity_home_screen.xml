@@ -41,7 +41,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="80dp"
                     android:text="Walk Safe"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="28sp"
                     android:fontFamily="@font/varela_round"
                     android:textStyle="bold" />
@@ -71,7 +71,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Start SOS Service"
-                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
                             android:textSize="16sp"
                             android:fontFamily="@font/varela_round"
                             android:gravity="center" />
@@ -92,8 +93,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Camera Detector"
-                            android:textColor="@android:color/white"
+                            android:textColor="@android:color/black"
                             android:textSize="16sp"
+                            android:textStyle="bold"
                             android:fontFamily="@font/varela_round"
                             android:gravity="center" />
                     </LinearLayout>
@@ -113,7 +115,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Live Location"
-                            android:textColor="@android:color/white"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold"
                             android:textSize="16sp"
                             android:fontFamily="@font/varela_round"
                             android:gravity="center" />
@@ -134,7 +137,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Siren"
-                            android:textColor="@android:color/white"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold"
                             android:textSize="16sp"
                             android:fontFamily="@font/varela_round"
                             android:gravity="center" />
@@ -155,7 +159,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Self-Defence"
-                            android:textColor="@android:color/white"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold"
                             android:textSize="16sp"
                             android:fontFamily="@font/varela_round"
                             android:gravity="center" />
