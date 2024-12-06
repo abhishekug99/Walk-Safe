@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">wsafety</string>
+    <string name="default_web_client_id">973484469324-pg9stlgunc4cgbmonuc9f7pffg0fimvu.apps.googleusercontent.com</string>
+    <string name="first_name">First Name</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="upload_from_gallery">Upload from Gallery</string>
+    <string name="profile_picture_optional">Profile Picture (Optional)</string>
+    <string name="popup_menu">Popup Menu</string>
+    <string name="sos_will_be_sent_to_n">SOS Will Be Sent To\n</string>
+    <string name="w_magnetometer_screen">Welcome to the Magnetometer Screen!</string>
+    <string name="title_defence_tutorials">Welcome to Self Defence Tutorials</string>
+    <string name="_0_">0 µT</string>
+    <string name="low">Chances of Hidden Camera: Low</string>
+    <string name="help">Help</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_live_location">LiveLocationActivity</string>
+
 </resources>
