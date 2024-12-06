@@ -35,6 +35,10 @@
         android:theme="@style/Theme.Wsafety"
         tools:replace="android:label, android:icon">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD4aWwqMqYEVCBQMsG6teUTUy3q5b26nWQ" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -46,10 +50,6 @@
              project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
              "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
-
         <activity
             android:name=".LiveLocationActivity"
             android:exported="false"
