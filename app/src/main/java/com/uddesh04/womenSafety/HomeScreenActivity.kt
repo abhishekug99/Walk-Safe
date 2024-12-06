@@ -47,29 +47,11 @@ class HomeScreenActivity : BaseActivity() {
         findViewById<ImageView>(R.id.btnHamburger).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
-        // Fetch user details for the navigation drawer
-
-
-
-//        val headerView = navigationView.getHeaderView(0)
-//        val headerUserName = headerView.findViewById<TextView>(R.id.headerUserName)
-//        val headerProfileIcon = headerView.findViewById<ImageView>(R.id.headerProfileIcon)
-//        val currentUserSnapshot = auth.currentUser
-//
-//        // Set user details
-//        if (currentUserSnapshot != null) {
-//            headerUserName.text = currentUserSnapshot.displayName ?: "Unknown User"
-//            // Optionally set a profile picture if available
-//            currentUserSnapshot.photoUrl?.let { photoUrl ->
-//                Glide.with(this).load(photoUrl).into(headerProfileIcon)
-//            }
-//        }
 
         setupNavigationHeader()
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         setupBottomNavigation(bottomNavigationView)
 
-        // Initialize Navigation Drawer
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_profile -> {
@@ -84,12 +66,10 @@ class HomeScreenActivity : BaseActivity() {
         }
 
 
-        // Navigate to SOS Service Activity
         findViewById<LinearLayout>(R.id.startSOSServiceTile).setOnClickListener {
             startActivity(Intent(this, SOSServiceActivity::class.java))
         }
 
-        // "Walk Safe" tile - No action currently specified, keep it for aesthetic purposes
         findViewById<LinearLayout>(R.id.cameraDetectorTile).setOnClickListener {
             startActivity(Intent(this, MagnetometerActivity::class.java))
         }
@@ -98,20 +78,9 @@ class HomeScreenActivity : BaseActivity() {
             startActivity(Intent(this, LiveLocationActivity::class.java))
         }
 
-
         findViewById<LinearLayout>(R.id.selfDefenceTile).setOnClickListener {
             startActivity(Intent(this, SelfDefenceActivity::class.java))
         }
-
-
-
-
-
-//        val profileButton = findViewById<ImageView>(R.id.btnProfile)
-//        profileButton.setOnClickListener {
-//            startActivity(Intent(this, MyProfileActivity::class.java))
-//        }
-
     }
 
     private fun setupNavigationHeader() {
@@ -119,7 +88,6 @@ class HomeScreenActivity : BaseActivity() {
         val headerUserName = headerView.findViewById<TextView>(R.id.headerUserName)
         val headerProfileIcon = headerView.findViewById<ImageView>(R.id.headerProfileIcon)
 
-        // Check if the current user has a displayName or photoUrl (Google sign-in)
         if (currentUser != null) {
             if (!currentUser?.displayName.isNullOrEmpty() || currentUser?.photoUrl != null) {
                 headerUserName.text = currentUser?.displayName ?: "Unknown User"
@@ -127,7 +95,6 @@ class HomeScreenActivity : BaseActivity() {
                     Glide.with(this).load(photoUrl).placeholder(R.drawable.default_profile_picture).into(headerProfileIcon)
                 }
             } else {
-                // Fetch user details from Realtime Database for email/password users
                 val userId = currentUser?.uid
                 val database = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
                 database.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -183,41 +150,15 @@ class HomeScreenActivity : BaseActivity() {
     }
 
     private fun logoutUser() {
-        // Log out from Firebase
         auth.signOut()
 
-        // Log out from Google
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         val googleSignInClient = GoogleSignIn.getClient(this, gso)
         googleSignInClient.signOut()
 
-        // Redirect to Login
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
-
-//    private fun setupBottomNavigation() {
-//        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.nav_home -> {
-//                    // Navigate to Home
-//                    startActivity(Intent(this, HomeScreenActivity::class.java))
-//                    true
-//                }
-//                R.id.nav_contacts -> {
-//                    // Navigate to RegisterNumberActivity
-//                    startActivity(Intent(this, RegisterNumberActivity::class.java))
-//                    true
-//                }
-//                R.id.nav_profile -> {
-//                    // Navigate to MyProfileActivity
-//                    startActivity(Intent(this, MyProfileActivity::class.java))
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
-//    }
 }

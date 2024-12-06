@@ -9,5 +9,8 @@
     <string name="sos_will_be_sent_to_n">SOS Will Be Sent To\n</string>
     <string name="w_magnetometer_screen">Welcome to the Magnetometer Screen!</string>
     <string name="title_defence_tutorials">Welcome to Self Defence Tutorials</string>
+    <string name="_0_">0 µT</string>
+    <string name="low">Chances of Hidden Camera: Low</string>
+    <string name="help">Help</string>
 
 </resources>

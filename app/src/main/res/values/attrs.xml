@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SpeedometerView">
+        <attr name="SpeedometerView_maxSpeed" format="float" />
+        <attr name="SpeedometerView_speed" format="float" />
+    </declare-styleable>
+</resources>
