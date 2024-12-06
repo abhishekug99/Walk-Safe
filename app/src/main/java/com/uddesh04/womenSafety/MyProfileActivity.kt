@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.InputType
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
@@ -141,6 +142,16 @@ class MyProfileActivity : BaseActivity() {
         val newPasswordInput = dialogView.findViewById<EditText>(R.id.editTextNewPassword)
         val confirmPasswordInput = dialogView.findViewById<EditText>(R.id.editTextConfirmPassword)
 
+        // Eye icons
+        val toggleOldPasswordVisibility = dialogView.findViewById<ImageView>(R.id.toggleOldPasswordVisibility)
+        val toggleNewPasswordVisibility = dialogView.findViewById<ImageView>(R.id.toggleNewPasswordVisibility)
+        val toggleConfirmPasswordVisibility = dialogView.findViewById<ImageView>(R.id.toggleConfirmPasswordVisibility)
+
+        // Handle eye icon click for password visibility toggle
+        setupPasswordToggle(toggleOldPasswordVisibility, oldPasswordInput)
+        setupPasswordToggle(toggleNewPasswordVisibility, newPasswordInput)
+        setupPasswordToggle(toggleConfirmPasswordVisibility, confirmPasswordInput)
+
         val dialog = AlertDialog.Builder(this)
             .setTitle("Change Password")
             .setView(dialogView)
@@ -182,6 +193,23 @@ class MyProfileActivity : BaseActivity() {
         }
 
         dialog.show()
+    }
+
+    // Helper function to toggle password visibility using an ImageView (eye icon)
+    private fun setupPasswordToggle(toggleIcon: ImageView, editText: EditText) {
+        toggleIcon.setOnClickListener {
+            if (editText.inputType == (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                // Show password
+                editText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                toggleIcon.setImageResource(R.drawable.ic_eye_off) // Update icon to "eye-off"
+            } else {
+                // Hide password
+                editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                toggleIcon.setImageResource(R.drawable.ic_eye) // Update icon to "eye"
+            }
+            // Move cursor to the end of the text
+            editText.setSelection(editText.text.length)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
