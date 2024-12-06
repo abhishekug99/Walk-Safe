@@ -12,5 +12,7 @@
     <string name="_0_">0 µT</string>
     <string name="low">Chances of Hidden Camera: Low</string>
     <string name="help">Help</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_live_location">LiveLocationActivity</string>
 
 </resources>
