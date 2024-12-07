@@ -1,116 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
+    <!-- Toolbar with Back Arrow -->
 
-    <!-- Toolbar with Back Arrow and Popup Menu -->
+    <!-- Trusted Contact Text -->
+
     <RelativeLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/bar_color"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="-16dp">
 
         <!-- Back Arrow -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:minWidth="48dp"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp" />
-
-        <!-- Popup Menu -->
-        <ImageButton
-            android:id="@+id/btnPopupMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:minWidth="48dp"
-            android:src="@drawable/ic_baseline_more_vert_24"
+            android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/popup_menu"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp" />
+            android:contentDescription="@string/back"
+            android:minWidth="48dp"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
 
         <!-- Toolbar Title -->
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/bar_color"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:id="@+id/toolbarTitle"
+            android:layout_width="148dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:layout_constraintTop_toTopOf="parent"
             app:title="SOS Service"
-            app:titleTextColor="@android:color/black"
-            app:titleMarginStart="60dp"
-            app:titleMarginEnd="60dp" />
+            app:titleTextColor="@android:color/black" />
     </RelativeLayout>
 
-    <!-- Main Content -->
-    <RelativeLayout
+    <!-- Start and Stop Buttons Centered -->
+
+    <!-- Bottom Navigation View -->
+
+    <TextView
+        android:id="@+id/textNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="160dp"
+        android:text="@string/sos_will_be_sent_to_n"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_centerInParent="true">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
 
-        <!-- Trusted Contact Text -->
-        <TextView
-            android:id="@+id/textNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:paddingHorizontal="12dp"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:text="@string/sos_will_be_sent_to_n"
-            android:layout_centerHorizontal="true" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="105dp"
+        android:layout_marginTop="294dp"
+        android:layout_marginEnd="106dp"
+        android:layout_marginBottom="296dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <!-- Start Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:layout_below="@id/textNum"
-            android:layout_marginTop="20dp"
-            app:cornerRadius="10dp"
             android:backgroundTint="#ffffff"
-            android:textColor="@color/black"
+            android:onClick="startService"
             android:text="@string/start"
-            android:onClick="startService" />
+            android:textColor="@color/black"
+            app:cornerRadius="10dp" />
 
         <!-- Stop Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stop"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:layout_below="@id/start"
-            android:layout_marginTop="10dp"
-            app:cornerRadius="10dp"
+            android:layout_marginTop="20dp"
             android:backgroundTint="#ffffff"
-            android:textColor="@color/black"
+            android:onClick="stopService"
             android:text="@string/stop"
-            android:onClick="stopService" />
-    </RelativeLayout>
+            android:textColor="@color/black"
+            app:cornerRadius="10dp" />
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bar_color"
-        android:layout_gravity="bottom"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black" />
+        app:itemTextColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>
