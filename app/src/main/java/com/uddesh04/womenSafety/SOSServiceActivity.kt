@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -30,6 +32,7 @@ class SOSServiceActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private var trustedContacts: MutableList<String> = mutableListOf()
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var startButton: MaterialButton
     private lateinit var stopButton: MaterialButton
     private var isServiceRunning: Boolean = false
@@ -38,6 +41,8 @@ class SOSServiceActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sos_service)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         startButton = findViewById(R.id.start)
         stopButton = findViewById(R.id.stop)
 
@@ -45,7 +50,7 @@ class SOSServiceActivity : BaseActivity() {
 
         val bottomNavigationView = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
         setupBottomNavigation(bottomNavigationView)
-        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
+        bottomNavigationView.menu.findItem(R.id.nav_home).isChecked = true
 
         val backButton = findViewById<ImageButton>(R.id.btnBack)
         backButton.setOnClickListener {
@@ -180,13 +185,30 @@ class SOSServiceActivity : BaseActivity() {
     }
 
     private fun sendSOSMessage(contact: String) {
-        val sosMessage = "Help! I am in danger. Please contact me immediately!"
-        try {
-            val smsManager = android.telephony.SmsManager.getDefault()
-            smsManager.sendTextMessage(contact, null, sosMessage, null, null)
-            Toast.makeText(this, "SOS sent to $contact", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(this, "Failed to send SOS to $contact", Toast.LENGTH_SHORT).show()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    val mapsLink = "https://maps.google.com/?q=$latitude,$longitude"
+
+                    val sosMessage = "Help! I am in danger. Please contact me immediately! My location: $mapsLink"
+
+                    try {
+                        val smsManager = android.telephony.SmsManager.getDefault()
+                        smsManager.sendTextMessage(contact, null, sosMessage, null, null)
+                        Toast.makeText(this, "SOS sent to $contact", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(this, "Failed to send SOS to $contact", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Unable to fetch location.", Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error getting location: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show()
         }
     }
 
