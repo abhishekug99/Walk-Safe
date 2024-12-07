@@ -21,8 +21,8 @@ class ServiceMine : Service() {
     private var isRunning: Boolean = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var myLocation: String = "Location Unavailable"
-
     override fun onBind(intent: Intent): IBinder? = null
+    private var trustedContacts: MutableList<String> = mutableListOf()
 
     override fun onCreate() {
         super.onCreate()
@@ -70,6 +70,7 @@ class ServiceMine : Service() {
             stopForeground(true)
             stopSelf()
         } else {
+
             startForegroundServiceWithNotification()
         }
         return START_NOT_STICKY

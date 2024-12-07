@@ -81,6 +81,14 @@ class HomeScreenActivity : BaseActivity() {
         findViewById<LinearLayout>(R.id.selfDefenceTile).setOnClickListener {
             startActivity(Intent(this, SelfDefenceActivity::class.java))
         }
+
+        findViewById<LinearLayout>(R.id.historyTile).setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
+        }
+
+        findViewById<LinearLayout>(R.id.sirenTile).setOnClickListener {
+            startActivity(Intent(this, SirenActivity::class.java))
+        }
     }
 
     override fun onResume() {
