@@ -104,36 +104,36 @@ class HomeScreenActivity : BaseActivity() {
         val headerProfileIcon = headerView.findViewById<ImageView>(R.id.headerProfileIcon)
 
         if (currentUser != null) {
-            if (!currentUser?.displayName.isNullOrEmpty() || currentUser?.photoUrl != null) {
-                headerUserName.text = currentUser?.displayName ?: "Unknown User"
-                currentUser?.photoUrl?.let { photoUrl ->
-                    Glide.with(this).load(photoUrl).placeholder(R.drawable.default_profile_picture).into(headerProfileIcon)
-                }
-            } else {
-                val userId = currentUser?.uid
-                val database = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
-                database.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists()) {
-                            val name = snapshot.child("name").getValue(String::class.java) ?: "Unknown User"
-                            val photoUrl = snapshot.child("profile_image").getValue(String::class.java)
+            val userId = currentUser?.uid
+            val database = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
 
-                            headerUserName.text = name
-                            if (!photoUrl.isNullOrEmpty()) {
-                                // Load the latest stored image from Firebase Storage
-                                Glide.with(this@HomeScreenActivity).load(photoUrl)
-                                    .placeholder(R.drawable.default_profile_picture).into(headerProfileIcon)
-                            } else {
-                                headerProfileIcon.setImageResource(R.drawable.default_profile_picture)
-                            }
+            database.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        // Fetch name from the database
+                        val name = snapshot.child("name").getValue(String::class.java) ?: "Unknown User"
+                        headerUserName.text = name
+
+                        // Fetch photo URL from the database
+                        val photoUrl = snapshot.child("photo_url").getValue(String::class.java)
+                        if (!photoUrl.isNullOrEmpty()) {
+                            Glide.with(this@HomeScreenActivity)
+                                .load(photoUrl)
+                                .placeholder(R.drawable.default_profile_picture)
+                                .into(headerProfileIcon)
+                        } else {
+                            headerProfileIcon.setImageResource(R.drawable.default_profile_picture)
                         }
+                    } else {
+                        headerUserName.text = "Unknown User"
+                        headerProfileIcon.setImageResource(R.drawable.default_profile_picture)
                     }
+                }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(this@HomeScreenActivity, "Failed to load user details: ${error.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@HomeScreenActivity, "Failed to load user details: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
         } else {
             headerUserName.text = "Unknown User"
             headerProfileIcon.setImageResource(R.drawable.default_profile_picture)
