@@ -39,7 +39,6 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:src="@drawable/default_profile_picture"
                 android:contentDescription="@string/profile_image"
                 android:clickable="true"
                 android:focusable="true"
@@ -67,11 +66,12 @@
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/textDateOfBirth"
+            <EditText
+                android:id="@+id/editTextDateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MM/dd/yyyy"
+                android:hint="Enter Date of Birth"
+                android:inputType="date"
                 android:textSize="16sp"
                 android:paddingBottom="16dp" />
 
@@ -84,14 +84,24 @@
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/textAge"
+            <EditText
+                android:id="@+id/editTextAge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="N/A"
+                android:hint="Enter Age"
+                android:inputType="number"
                 android:textSize="16sp"
                 android:paddingBottom="16dp" />
 
+            <!-- Save Button for Age and Date of Birth -->
+            <Button
+                android:id="@+id/btnSaveAgeAndDob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/bar_color"
+                android:text="Save"
+                android:textColor="@android:color/black" />
             <!-- Email -->
             <TextView
                 android:layout_width="wrap_content"
