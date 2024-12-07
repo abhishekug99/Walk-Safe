@@ -22,9 +22,9 @@ import com.google.firebase.database.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
 
 
 class MyProfileActivity : BaseActivity() {
@@ -73,6 +73,27 @@ class MyProfileActivity : BaseActivity() {
         val listView = findViewById<ListView>(R.id.listViewContacts)
         val addContactButton = findViewById<Button>(R.id.btnAddContact)
         val changePasswordButton = findViewById<Button>(R.id.btnChangePassword) // Change Password Button
+        val dateOfBirthField = findViewById<EditText>(R.id.editTextDateOfBirth)
+        val ageField = findViewById<EditText>(R.id.editTextAge)
+        val saveAgeAndDobButton = findViewById<Button>(R.id.btnSaveAgeAndDob)
+
+        saveAgeAndDobButton.setOnClickListener {
+            val dob = dateOfBirthField.text.toString()
+            val age = ageField.text.toString()
+
+            if (dob.isEmpty() || age.isEmpty()) {
+                Toast.makeText(this, "Please enter both Date of Birth and Age.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val userId = user?.uid ?: return@setOnClickListener
+            val database = FirebaseDatabase.getInstance().reference
+
+            database.child("users").child(userId).child("date_of_birth").setValue(dob)
+            database.child("users").child(userId).child("age").setValue(age)
+
+            Toast.makeText(this, "Age and Date of Birth updated successfully!", Toast.LENGTH_SHORT).show()
+        }
 
         // Load user details
         fetchUserDetails(nameField, emailField)
