@@ -221,16 +221,21 @@ class MyProfileActivity : BaseActivity() {
 
     private fun loadProfileImage() {
         val database = FirebaseDatabase.getInstance().reference
-        user?.uid?.let {
-            database.child("users").child(it).child("profile_image").get()
+        user?.uid?.let { userId ->
+            database.child("users").child(userId).child("photo_url").get()
                 .addOnSuccessListener { snapshot ->
-                    val imageUrl = snapshot.getValue(String::class.java)
-                    imageUrl?.let {
-                        Glide.with(this).load(it).into(imageViewProfile)
+                    val photoUrl = snapshot.getValue(String::class.java)
+                    if (!photoUrl.isNullOrEmpty()) {
+                        Glide.with(this)
+                            .load(photoUrl)
+                            .skipMemoryCache(true) // Optional: To prevent caching issues
+                            .into(imageViewProfile)
+                    } else {
+                        Toast.makeText(this, "No profile image found", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "Failed to load profile image", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Failed to load profile image: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }
