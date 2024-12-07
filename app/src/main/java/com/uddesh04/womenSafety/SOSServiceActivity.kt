@@ -72,11 +72,6 @@ class SOSServiceActivity : BaseActivity() {
             finish()
         }
 
-        val popupMenuButton = findViewById<ImageButton>(R.id.btnPopupMenu)
-        popupMenuButton.setOnClickListener { view ->
-            showPopupMenu(view)
-        }
-
         auth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -108,32 +103,32 @@ class SOSServiceActivity : BaseActivity() {
 
     private fun fetchCurrentLocation() {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    0L,
-                    0f,
-                    object : LocationListener {
-                        override fun onLocationChanged(location: Location) {
-                            currentLocation = location
-                            locationManager.removeUpdates(this) // Stop updates after getting location
-                        }
-
-                        override fun onProviderEnabled(provider: String) {}
-                        override fun onProviderDisabled(provider: String) {}
-                        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                0L,
+                0f,
+                object : LocationListener {
+                    override fun onLocationChanged(location: Location) {
+                        currentLocation = location
+                        locationManager.removeUpdates(this) // Stop updates after getting location
                     }
-                )
-            }
 
-      else {
+                    override fun onProviderEnabled(provider: String) {}
+                    override fun onProviderDisabled(provider: String) {}
+                    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+                }
+            )
+        }
+
+        else {
             requestPermissions()
         }
     }
@@ -338,27 +333,6 @@ class SOSServiceActivity : BaseActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
         )
-    }
-
-    private fun showPopupMenu(view: View) {
-        val popupMenu = android.widget.PopupMenu(this, view)
-        popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.changeNumber -> {
-                    startActivity(Intent(this, RegisterNumberActivity::class.java))
-                    true
-                }
-                R.id.logOut -> {
-                    auth.signOut()
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                    true
-                }
-                else -> false
-            }
-        }
-        popupMenu.show()
     }
 
 }
