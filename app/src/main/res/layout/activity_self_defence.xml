@@ -37,7 +37,6 @@
         android:layout_height="wrap_content"
         android:background="@color/bar_color"
         app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

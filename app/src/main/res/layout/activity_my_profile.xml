@@ -159,6 +159,7 @@
         android:background="@color/bar_color"
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black" />
 </androidx.constraintlayout.widget.ConstraintLayout>
