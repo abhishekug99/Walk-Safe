@@ -72,11 +72,6 @@ class SOSServiceActivity : BaseActivity() {
             finish()
         }
 
-        val popupMenuButton = findViewById<ImageButton>(R.id.btnPopupMenu)
-        popupMenuButton.setOnClickListener { view ->
-            showPopupMenu(view)
-        }
-
         auth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -339,26 +334,4 @@ class SOSServiceActivity : BaseActivity() {
             )
         )
     }
-
-    private fun showPopupMenu(view: View) {
-        val popupMenu = android.widget.PopupMenu(this, view)
-        popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.changeNumber -> {
-                    startActivity(Intent(this, RegisterNumberActivity::class.java))
-                    true
-                }
-                R.id.logOut -> {
-                    auth.signOut()
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                    true
-                }
-                else -> false
-            }
-        }
-        popupMenu.show()
-    }
-
 }
