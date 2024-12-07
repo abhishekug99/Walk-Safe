@@ -116,10 +116,11 @@ class HomeScreenActivity : BaseActivity() {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             val name = snapshot.child("name").getValue(String::class.java) ?: "Unknown User"
-                            val photoUrl = snapshot.child("photo_url").getValue(String::class.java)
+                            val photoUrl = snapshot.child("profile_image").getValue(String::class.java)
 
                             headerUserName.text = name
                             if (!photoUrl.isNullOrEmpty()) {
+                                // Load the latest stored image from Firebase Storage
                                 Glide.with(this@HomeScreenActivity).load(photoUrl)
                                     .placeholder(R.drawable.default_profile_picture).into(headerProfileIcon)
                             } else {

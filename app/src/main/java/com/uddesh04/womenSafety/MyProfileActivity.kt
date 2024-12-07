@@ -1,11 +1,17 @@
 package com.uddesh04.womenSafety
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.text.InputType
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -14,12 +20,22 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+
 
 class MyProfileActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var trustedNumbersList: MutableList<String>
     private lateinit var adapter: TrustedContactsAdapter
     private var user: FirebaseUser? = null
+    private lateinit var imageViewProfile: ImageView
+
+    private val CAMERA_PERMISSION_REQUEST_CODE = 100
+    private var storageReference: StorageReference = FirebaseStorage.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +44,16 @@ class MyProfileActivity : BaseActivity() {
         // Firebase Authentication
         auth = FirebaseAuth.getInstance()
         user = auth.currentUser
+
+        imageViewProfile = findViewById(R.id.profileImageView)
+
+        // Load profile image from Firebase
+        loadProfileImage()
+
+        // Set click listener to choose an image
+        imageViewProfile.setOnClickListener {
+            showImagePickerDialog()
+        }
 
         // Set up toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -76,6 +102,118 @@ class MyProfileActivity : BaseActivity() {
         }
     }
 
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select Profile Image")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> checkCameraPermission()
+                1 -> openGallery()
+            }
+        }
+        builder.show()
+    }
+
+    private fun checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera()
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera()
+            } else {
+                Toast.makeText(this, "Camera permission is required to take a photo.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun openCamera() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraLauncher.launch(cameraIntent)
+    }
+
+    private fun openGallery() {
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        galleryLauncher.launch(galleryIntent)
+    }
+
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageBitmap = result.data?.extras?.get("data") as? Bitmap
+            imageBitmap?.let { uploadImageToFirebase(it) }
+        }
+    }
+
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageUri: Uri? = result.data?.data
+            imageUri?.let { uploadImageToFirebase(it) }
+        }
+    }
+
+    private fun uploadImageToFirebase(image: Bitmap) {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val imageData = byteArrayOutputStream.toByteArray()
+
+        val ref = storageReference.child("profile_images/${user?.uid}.jpg")
+        ref.putBytes(imageData)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { uri ->
+                    saveImageUrlToDatabase(uri.toString())
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun uploadImageToFirebase(imageUri: Uri) {
+        val ref = storageReference.child("profile_images/${user?.uid}.jpg")
+        ref.putFile(imageUri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { uri ->
+                    saveImageUrlToDatabase(uri.toString())
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun saveImageUrlToDatabase(imageUrl: String) {
+        val database = FirebaseDatabase.getInstance().reference
+        user?.uid?.let {
+            database.child("users").child(it).child("profile_image").setValue(imageUrl)
+            Glide.with(this).load(imageUrl).into(imageViewProfile)
+            Toast.makeText(this, "Image updated successfully!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadProfileImage() {
+        val database = FirebaseDatabase.getInstance().reference
+        user?.uid?.let {
+            database.child("users").child(it).child("profile_image").get()
+                .addOnSuccessListener { snapshot ->
+                    val imageUrl = snapshot.getValue(String::class.java)
+                    imageUrl?.let {
+                        Glide.with(this).load(it).into(imageViewProfile)
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to load profile image", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
     private fun fetchUserDetails(nameField: TextView, emailField: EditText) {
         val userId = user?.uid ?: return
         val database = FirebaseDatabase.getInstance().reference
@@ -96,13 +234,6 @@ class MyProfileActivity : BaseActivity() {
                 Toast.makeText(this@MyProfileActivity, "Error loading profile data: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.menu.findItem(R.id.nav_profile).isChecked = true
     }
 
     private fun fetchTrustedContacts() {
@@ -135,7 +266,6 @@ class MyProfileActivity : BaseActivity() {
         val database = FirebaseDatabase.getInstance().reference
         database.child("users").child(userId).child("trusted_contacts").setValue(trustedNumbersList)
     }
-
     private fun showChangePasswordDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_change_password, null)
         val oldPasswordInput = dialogView.findViewById<EditText>(R.id.editTextOldPassword)

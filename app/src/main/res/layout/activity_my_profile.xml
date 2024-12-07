@@ -15,7 +15,7 @@
         android:background="@color/bar_color"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="My Profile"
-        app:titleTextColor="@android:color/white"
+        app:titleTextColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Profile Content in a ScrollView -->
@@ -40,6 +40,9 @@
                 android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:src="@drawable/default_profile_picture"
+                android:contentDescription="@string/profile_image"
+                android:clickable="true"
+                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/circular_background" />
@@ -61,7 +64,8 @@
                 android:layout_height="wrap_content"
                 android:text="Date of Birth"
                 android:textSize="16sp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/textDateOfBirth"
@@ -77,7 +81,8 @@
                 android:layout_height="wrap_content"
                 android:text="Age"
                 android:textSize="16sp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/textAge"
@@ -93,7 +98,8 @@
                 android:layout_height="wrap_content"
                 android:text="Email"
                 android:textSize="16sp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -106,10 +112,12 @@
 
             <Button
                 android:id="@+id/btnSaveEmail"
-                android:layout_width="wrap_content"
+                android:layout_width="202dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/bar_color"
                 android:text="Save Email"
-                android:layout_marginTop="8dp" />
+                android:textColor="@android:color/black" />
 
             <!-- Change Password Button -->
             <TextView
@@ -117,16 +125,17 @@
                 android:layout_height="wrap_content"
                 android:text="Password"
                 android:textSize="16sp"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/btnChangePassword"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Change Password"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/purple_500"
-                android:textColor="@android:color/white" />
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/bar_color"
+                android:textColor="@android:color/black" />
 
             <!-- Trusted Contacts -->
             <TextView
@@ -134,14 +143,17 @@
                 android:layout_height="wrap_content"
                 android:text="Trusted Contacts"
                 android:textSize="16sp"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/btnAddContact"
-                android:layout_width="wrap_content"
+                android:layout_width="202dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/bar_color"
                 android:text="Add Contact"
-                android:layout_marginTop="8dp" />
+                android:textColor="@android:color/black" />
 
             <ListView
                 android:id="@+id/listViewContacts"
