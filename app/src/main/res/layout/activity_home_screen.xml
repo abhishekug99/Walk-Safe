@@ -67,6 +67,13 @@
                         android:gravity="center"
                         android:background="@drawable/tile_background">
 
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_sos"
+                            android:contentDescription="SOS Icon" />
+
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -88,6 +95,12 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:background="@drawable/tile_background">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_camera"
+                            android:contentDescription="Camera Icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -111,6 +124,12 @@
                         android:gravity="center"
                         android:background="@drawable/tile_background">
 
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_location"
+                            android:contentDescription="Location Icon" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -132,6 +151,12 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:background="@drawable/tile_background">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_siren"
+                            android:contentDescription="Siren Icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -155,6 +180,12 @@
                         android:gravity="center"
                         android:background="@drawable/tile_background">
 
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_self_defence"
+                            android:contentDescription="Self Defence Icon" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -175,6 +206,13 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:background="@drawable/tile_background">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_history"
+                            android:contentDescription="History Icon" />
+
 
                         <TextView
                             android:layout_width="wrap_content"
