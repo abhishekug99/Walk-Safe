@@ -72,6 +72,11 @@ class SOSServiceActivity : BaseActivity() {
             finish()
         }
 
+        val popupMenuButton = findViewById<ImageButton>(R.id.btnPopupMenu)
+        popupMenuButton.setOnClickListener { view ->
+            showPopupMenu(view)
+        }
+
         auth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -182,9 +187,9 @@ class SOSServiceActivity : BaseActivity() {
                 // Record the start time in the database
                 recordServiceStartTime()
 
-//                for (contact in trustedContacts) {
-//                    sendSOSMessage(contact)
-//                }
+                for (contact in trustedContacts) {
+                    sendSOSMessage(contact)
+                }
                 val intent = Intent(this, ServiceMine::class.java).apply { action = "START" }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     ContextCompat.startForegroundService(this, intent)
@@ -333,6 +338,27 @@ class SOSServiceActivity : BaseActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
         )
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = android.widget.PopupMenu(this, view)
+        popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.changeNumber -> {
+                    startActivity(Intent(this, RegisterNumberActivity::class.java))
+                    true
+                }
+                R.id.logOut -> {
+                    auth.signOut()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
 }
