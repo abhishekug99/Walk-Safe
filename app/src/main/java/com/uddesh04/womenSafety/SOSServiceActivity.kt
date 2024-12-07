@@ -187,9 +187,9 @@ class SOSServiceActivity : BaseActivity() {
                 // Record the start time in the database
                 recordServiceStartTime()
 
-//                for (contact in trustedContacts) {
-//                    sendSOSMessage(contact)
-//                }
+                for (contact in trustedContacts) {
+                    sendSOSMessage(contact)
+                }
                 val intent = Intent(this, ServiceMine::class.java).apply { action = "START" }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     ContextCompat.startForegroundService(this, intent)
