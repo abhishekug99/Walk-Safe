@@ -51,13 +51,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/upload_from_gallery"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/bar_color"
+                android:textColor="@android:color/black"/>
 
             <Button
                 android:id="@+id/btnCapturePhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/capture_photo" />
+                android:text="@string/capture_photo"
+                android:backgroundTint="@color/bar_color"
+                android:textColor="@android:color/black"/>
 
 
             <!-- First Name -->
@@ -163,7 +167,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Register"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/bar_color"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
     </ScrollView>
 
