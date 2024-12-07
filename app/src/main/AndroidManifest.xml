@@ -78,6 +78,7 @@
         <activity android:name=".MagnetometerActivity" />
         <activity android:name=".SelfDefenceActivity" /> <!-- Service for background operations -->
         <activity android:name=".HistoryActivity" />
+        <activity android:name=".YouTubePlayerActivity" />
         <activity android:name=".SirenActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar.Transparent"/>
         <service
             android:name=".ServiceMine"
