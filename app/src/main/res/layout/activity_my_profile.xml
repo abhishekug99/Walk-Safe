@@ -40,6 +40,9 @@
                 android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:src="@drawable/default_profile_picture"
+                android:contentDescription="@string/profile_image"
+                android:clickable="true"
+                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/circular_background" />
