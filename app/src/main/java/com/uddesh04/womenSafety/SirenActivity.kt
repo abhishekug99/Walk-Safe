@@ -4,7 +4,6 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -15,15 +14,14 @@ import com.google.firebase.storage.ktx.storage
 
 class SirenActivity : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
+    private var countdownTimer: CountDownTimer? = null
+    private var alertDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_screen)
 
-        val sirenTile = findViewById<View>(R.id.sirenTile)
-        sirenTile.setOnClickListener {
-            showCountdownDialog()
-        }
+        // Show countdown dialog immediately
+        showCountdownDialog()
     }
 
     private fun showCountdownDialog() {
@@ -33,30 +31,33 @@ class SirenActivity : AppCompatActivity() {
         val countdownText = dialogView.findViewById<TextView>(R.id.textCountdown)
         val cancelButton = dialogView.findViewById<Button>(R.id.btnCancelCountdown)
 
-        val alertDialog = AlertDialog.Builder(this)
+        alertDialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setCancelable(false)
             .create()
 
-        val countdownTimer = object : CountDownTimer(3000, 1000) {
+        countdownTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 countdownText.text = "Siren will start in ${millisUntilFinished / 1000} seconds"
             }
 
             override fun onFinish() {
-                alertDialog.dismiss()
+                alertDialog?.dismiss()
                 fetchAndPlaySiren()
+                countdownTimer = null
             }
         }
 
         cancelButton.setOnClickListener {
-            countdownTimer.cancel()
-            alertDialog.dismiss()
+            countdownTimer?.cancel()
+            countdownTimer = null
+            alertDialog?.dismiss()
+            finish()  // Close the transparent activity
             Toast.makeText(this, "Siren cancelled.", Toast.LENGTH_SHORT).show()
         }
 
-        alertDialog.show()
-        countdownTimer.start()
+        alertDialog?.show()
+        countdownTimer?.start()
     }
 
     private fun fetchAndPlaySiren() {
@@ -66,6 +67,7 @@ class SirenActivity : AppCompatActivity() {
             playSiren(uri.toString())
         }.addOnFailureListener {
             Toast.makeText(this, "Failed to load siren sound.", Toast.LENGTH_SHORT).show()
+            finish()  // Close the transparent activity if the siren fails to load
         }
     }
 
@@ -79,6 +81,7 @@ class SirenActivity : AppCompatActivity() {
             showStopSirenDialog()
         } catch (e: Exception) {
             Toast.makeText(this, "Error playing siren sound.", Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 
@@ -89,6 +92,10 @@ class SirenActivity : AppCompatActivity() {
         builder.setCancelable(false)
         builder.setPositiveButton("Stop Siren") { dialog, _ ->
             stopSiren()
+            dialog.dismiss()
+            finish()  // Close the transparent activity
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.dismiss()
         }
         builder.show()

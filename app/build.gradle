@@ -9,6 +9,16 @@ android {
     compileSdkVersion 35
 //    buildToolsVersion "30.0.3"
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'mozilla/public-suffix-list.txt'
+    }
 
     defaultConfig {
         applicationId "com.uddesh04.womenSafety"
@@ -86,11 +96,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'androidx.cardview:cardview:1.0.0'
 
-
-
-
-
-
+    implementation 'com.google.api-client:google-api-client-android:1.31.5'
+    implementation 'com.google.http-client:google-http-client-gson:1.41.3'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
 
 }
 
