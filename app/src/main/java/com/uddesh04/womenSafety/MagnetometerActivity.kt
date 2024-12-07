@@ -8,6 +8,8 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.math.sqrt
 
 class MagnetometerActivity : BaseActivity(), SensorEventListener {
@@ -36,6 +38,29 @@ class MagnetometerActivity : BaseActivity(), SensorEventListener {
         // Initialize sensors
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+
+        val helpButton = findViewById<FloatingActionButton>(R.id.magnetoInst)
+        helpButton.setOnClickListener {
+            showHelpDialog()
+        }
+    }
+
+    private fun showHelpDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("How the Hidden Camera Detection Works")
+            .setMessage(
+                "This tool helps you find hidden cameras using your phone.\n\n" +
+                        "Steps to use this feature:\n" +
+                        "1. Walk around the room with your phone.\n" +
+                        "2. Hold your phone close to suspicious objects like mirrors, clocks, or decorations.\n" +
+                        "3. The app will automatically scan the area as you move.\n" +
+                        "4. If a hidden camera is detected, you'll hear an alert sound.\n\n" +
+                        "Use this tool in places like changing rooms, hotel rooms, or restrooms to stay safe."
+            )
+            .setPositiveButton("Got it") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onResume() {
