@@ -25,6 +25,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -75,6 +77,8 @@
         <activity android:name=".RegisterNumberActivity" />
         <activity android:name=".MagnetometerActivity" />
         <activity android:name=".SelfDefenceActivity" /> <!-- Service for background operations -->
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".SirenActivity" android:launchMode="singleTop"/>
         <service
             android:name=".ServiceMine"
             android:enabled="true"
