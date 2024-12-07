@@ -96,7 +96,7 @@ class MyProfileActivity : BaseActivity() {
         }
 
         // Load user details
-        fetchUserDetails(nameField, emailField)
+        fetchUserDetails(nameField, emailField, ageField, dateOfBirthField)
 
         // Initialize trusted contacts
         trustedNumbersList = mutableListOf()
@@ -235,7 +235,7 @@ class MyProfileActivity : BaseActivity() {
         }
     }
 
-    private fun fetchUserDetails(nameField: TextView, emailField: EditText) {
+    private fun fetchUserDetails(nameField: TextView, emailField: EditText, dateOfBirthField:EditText, ageField:EditText) {
         val userId = user?.uid ?: return
         val database = FirebaseDatabase.getInstance().reference
 
@@ -244,10 +244,15 @@ class MyProfileActivity : BaseActivity() {
                 if (snapshot.exists()) {
                     val name = snapshot.child("name").getValue(String::class.java) ?: "Unknown User"
                     val email = snapshot.child("email").getValue(String::class.java) ?: ""
+                    val dob = snapshot.child("age").getValue(String::class.java) ?: ""
+                    val age = snapshot.child("date_of_birth").getValue(String::class.java) ?: ""
+
 
                     // Populate fields
                     nameField.text = name
                     emailField.setText(email)
+                    dateOfBirthField.setText(dob)
+                    ageField.setText(age)
                 }
             }
 
