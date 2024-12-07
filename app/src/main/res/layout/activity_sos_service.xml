@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
+
     <!-- Toolbar with Back Arrow and Popup Menu -->
     <RelativeLayout
         android:id="@+id/toolbarLayout"
@@ -24,6 +25,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/back"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="8dp" />
 
         <!-- Popup Menu -->
@@ -36,7 +38,20 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/popup_menu"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="8dp" />
+
+        <!-- Toolbar Title -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bar_color"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:title="SOS Service"
+            app:titleTextColor="@android:color/black"
+            app:titleMarginStart="60dp"
+            app:titleMarginEnd="60dp" />
     </RelativeLayout>
 
     <!-- Main Content -->
