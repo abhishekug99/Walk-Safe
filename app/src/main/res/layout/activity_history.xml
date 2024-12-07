@@ -14,7 +14,7 @@
         android:background="@color/bar_color"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="SOS History"
-        app:titleTextColor="@android:color/white"
+        app:titleTextColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
