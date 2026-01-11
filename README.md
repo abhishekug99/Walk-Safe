@@ -75,7 +75,7 @@ To install the Walk Safe app on your Android device:
 
 1. Abhishek Umesh Gavali
 2. Uddesh Shyam Kshirsagar
-
+3. Namita Sacchidanand Naikwadi
 ## Contributing:
 
 We welcome contributions to Walk Safe! If you would like to contribute, please follow these steps:
